@@ -42,6 +42,7 @@ interface FormValues {
 
 interface FormErrors {
   firstName?: string;
+  lastName?: string;
   email?: string;
   language?: string;
   country?: string;
@@ -57,6 +58,7 @@ export default function AccessibleForm() {
   const baseId = useId();
   const ids = {
     firstNameError: `${baseId}-firstName-error`,
+    lastNameError: `${baseId}-lastName-error`,
     emailError: `${baseId}-email-error`,
     languageError: `${baseId}-language-error`,
     countryError: `${baseId}-country-error`,
@@ -79,6 +81,8 @@ export default function AccessibleForm() {
     const e: FormErrors = {};
     if (!vals.firstName.trim() || vals.firstName.trim().length < 2)
       e.firstName = 'First name is required and must be at least 2 characters.';
+    if (!vals.lastName.trim() || vals.lastName.trim().length < 2)
+      e.lastName = 'Last name is required and must be at least 2 characters.';
     if (!vals.email.trim()) {
       e.email = 'Email is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(vals.email)) {
@@ -106,6 +110,7 @@ export default function AccessibleForm() {
 
   const errorList = [
     errors.firstName,
+    errors.lastName,
     errors.email,
     errors.language,
     errors.country,
@@ -182,7 +187,7 @@ export default function AccessibleForm() {
             )}
           </FormControl>
 
-          <FormControl>
+          <FormControl error={submitted && !!errors.lastName}>
             <Box
               component="label"
               htmlFor={`${baseId}-lastName`}
@@ -195,9 +200,19 @@ export default function AccessibleForm() {
               value={values.lastName}
               onChange={(e) => setValues((v) => ({ ...v, lastName: e.target.value }))}
               autoComplete="family-name"
-              inputProps={{ 'aria-required': 'true' }}
+              inputProps={{
+                'aria-required': 'true',
+                'aria-describedby': errors.lastName ? ids.lastNameError : undefined,
+                'aria-invalid': submitted && !!errors.lastName ? 'true' : undefined,
+              }}
               size="small"
+              error={submitted && !!errors.lastName}
             />
+            {submitted && errors.lastName && (
+              <FormHelperText id={ids.lastNameError} error>
+                {errors.lastName}
+              </FormHelperText>
+            )}
           </FormControl>
 
           <FormControl error={submitted && !!errors.email}>

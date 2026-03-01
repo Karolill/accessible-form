@@ -105,7 +105,7 @@ export default function InaccessibleForm() {
       </div>
 
       <button
-        type="submit"
+        type="button"
         onClick={handleSubmit}
         style={{
           padding: '10px 24px',
